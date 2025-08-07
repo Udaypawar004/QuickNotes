@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# QuickNote
 
-## Getting Started
+QuickNote is a project designed to help users organize thoughts, notes, and ideas efficiently.
 
-First, run the development server:
+## Features
+
+- Note-taking and organization
+- Search and filter notes
+- User-friendly interface
+
+## Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/udaypawar004/quicknotes.git
+cd _____
+# Follow project-specific setup instructions
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+  
+Before running the project, make sure to:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Set up a [Supabase](https://supabase.com/) project and obtain your API keys.
+- Configure your database schema using [Prisma](https://www.prisma.io/).
+- Obtain a Gemini API key for AI-powered features.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create a `.env` file in the project root with the following variables:
 
-## Learn More
+```env
+SUPABASE_URL=your_supabase_url
+SUPABASE_ANON_KEY=your_supabase_anon_key
+DATABASE_URL=your_prisma_database_url
+GEMINI_API_KEY=your_gemini_api_key
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+```
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Ensure you have [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
+2. Install dependencies:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+    ```bash
+    npm install
+    ```
 
-## Deploy on Vercel
+3. Start the development server:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+    ```bash
+    npm start
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. Open your browser and navigate to `http://localhost:3000` to use QuickNote.
+
+## Usage
+
+1. Start the application.
+2. Create and manage your notes.
+3. Search and organize as needed.
+
+## Contributing
+
+Contributions are welcome! Please open issues or submit pull requests.
+
+## License
+
+This project is licensed under the MIT License.
