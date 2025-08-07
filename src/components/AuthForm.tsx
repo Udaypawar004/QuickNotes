@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import React from 'react'
-import { Card, CardContent, CardFooter } from './ui/card';
+import { CardContent, CardFooter } from './ui/card';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { loginAction, signupAction } from '@/actions/users';

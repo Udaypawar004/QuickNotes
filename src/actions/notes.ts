@@ -14,7 +14,7 @@ export async function updateNoteAction(noteID: string, text: string) {
             throw new Error("User not authenticated, please log in.");
         }
 
-        const updatedNote = await prisma.note.update({
+        await prisma.note.update({
             where: { id: noteID, authorId: user.id },
             data: { text },
         });

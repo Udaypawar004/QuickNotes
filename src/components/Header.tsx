@@ -5,8 +5,6 @@ import { Button } from "./ui/button";
 import DarkModeToggle from "./DarkModeToggle";
 import LogOutButton from "./LogOutButton";
 import { getUser } from "@/auth/server";
-import { SidebarTrigger } from "./ui/sidebar";
-
 
 const Header = async () => {
   const user = await getUser();

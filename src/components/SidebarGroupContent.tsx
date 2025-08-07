@@ -1,6 +1,5 @@
 "use client";
 
-import { Note } from "@prisma/client";
 import {
   SidebarGroupContent as SidebarGroupContentShadCN,
   SidebarMenu,
@@ -12,7 +11,9 @@ import { useEffect, useMemo, useState } from "react";
 import Fuse from "fuse.js";
 import DeleteNoteButton from "./DeleteNoteButton";
 import SelectNoteButton from "./SelectNoteButton";
+import { prisma } from "@/db/prisma";
 
+type Note = Awaited<ReturnType<typeof prisma.note.findFirst>>;
 type Props = {
   notes: Note[];
 };
@@ -38,7 +39,7 @@ function SidebarGroupContent({ notes }: Props) {
 
   const deleteNoteLocally = (noteId: string) => {
     setLocalNotes((prevNotes) =>
-      prevNotes.filter((note) => note.id !== noteId),
+      prevNotes.filter((note) => note?.id !== noteId),
     );
   };
 
@@ -56,11 +57,11 @@ function SidebarGroupContent({ notes }: Props) {
 
       <SidebarMenu className="mt-4">
         {filteredNotes.map((note) => (
-          <SidebarMenuItem key={note.id} className="group/item">
+          <SidebarMenuItem key={note?.id} className="group/item">
             <SelectNoteButton note={note} />
 
             <DeleteNoteButton
-              noteId={note.id}
+              noteId={note?.id || ""}
               deleteNoteLocally={deleteNoteLocally}
             />
           </SidebarMenuItem>
