@@ -44,46 +44,85 @@ export async function updateSession(request: NextRequest) {
     request.nextUrl.pathname === "/sign-up";
 
   if (isAuthRoute) {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (user) {
-      return NextResponse.redirect(
-        new URL("/", process.env.NEXT_PUBLIC_BASE_URL),
-      );
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        // Use request.nextUrl.origin instead of environment variable
+        return NextResponse.redirect(new URL("/", request.nextUrl.origin));
+      }
+    } catch (error) {
+      console.error("Auth check error:", error);
+      // Continue with the request if auth check fails
     }
   }
 
   const { searchParams, pathname } = new URL(request.url);
 
   if (!searchParams.get("noteId") && pathname === "/") {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-    if (user) {
-      const { newestNoteId } = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/fetch-newest-note?userId=${user.id}`,
-      ).then((res) => res.json());
+      if (user) {
+        // Use absolute URL with request.nextUrl.origin
+        const baseUrl = request.nextUrl.origin;
+        
+        try {
+          const newestNoteResponse = await fetch(
+            `${baseUrl}/api/fetch-newest-note?userId=${user.id}`,
+            {
+              // Add headers to ensure proper request handling
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+          
+          if (!newestNoteResponse.ok) {
+            throw new Error(`HTTP error! status: ${newestNoteResponse.status}`);
+          }
+          
+          const { newestNoteId } = await newestNoteResponse.json();
 
-      if (newestNoteId) {
-        const url = request.nextUrl.clone();
-        url.searchParams.set("noteId", newestNoteId);
-        return NextResponse.redirect(url);
-      } else {
-        const { noteId } = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/create-new-note?userId=${user.id}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          },
-        ).then((res) => res.json());
-        const url = request.nextUrl.clone();
-        url.searchParams.set("noteId", noteId);
-        return NextResponse.redirect(url);
+          if (newestNoteId) {
+            const url = request.nextUrl.clone();
+            url.searchParams.set("noteId", newestNoteId);
+            return NextResponse.redirect(url);
+          } else {
+            // Create new note
+            const createNoteResponse = await fetch(
+              `${baseUrl}/api/create-new-note?userId=${user.id}`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+            
+            if (!createNoteResponse.ok) {
+              throw new Error(`HTTP error! status: ${createNoteResponse.status}`);
+            }
+            
+            const { noteId } = await createNoteResponse.json();
+            
+            if (noteId) {
+              const url = request.nextUrl.clone();
+              url.searchParams.set("noteId", noteId);
+              return NextResponse.redirect(url);
+            }
+          }
+        } catch (fetchError) {
+          console.error("API fetch error:", fetchError);
+          // Continue with the request if API calls fail
+        }
       }
+    } catch (error) {
+      console.error("User check error:", error);
+      // Continue with the request if user check fails
     }
   }
 
