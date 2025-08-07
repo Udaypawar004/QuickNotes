@@ -4,7 +4,8 @@ import { getUser } from "@/auth/server";
 import { prisma } from "@/db/prisma";
 import { handleError } from "@/lib/utils";
 import { Content, GoogleGenerativeAI } from "@google/generative-ai";
-import { Note } from "@prisma/client";
+
+type Note = Awaited<ReturnType<typeof prisma.note.findFirst>>;
 
 export async function updateNoteAction(noteID: string, text: string) {
     try {
@@ -87,9 +88,9 @@ export const askAIAboutNotesAction = async (
   const formattedNotes: string = notes
     .map((note) =>
       `
-      Text: ${note.text}
-      Created at: ${note.createdAt.toISOString()}
-      Last updated: ${note.updatedAt.toISOString()}
+      Text: ${note?.text}
+      Created at: ${note?.createdAt.toISOString()}
+      Last updated: ${note?.updatedAt.toISOString()}
       `.trim(),
     )
     .join("\n");
@@ -140,6 +141,5 @@ export const askAIAboutNotesAction = async (
   const response = result.response;
   const text = response.text();
 
-  console.log("Gemini response is: ", text);
   return text || "A problem has occurred";
 };
